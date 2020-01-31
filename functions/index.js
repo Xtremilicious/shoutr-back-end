@@ -115,7 +115,7 @@ exports.createNotificationOnComment = functions
 
 exports.onUserImageChange = functions
   .region('us-central1')
-  .firestore.document('/users/{userId}')
+  .firestore.document('/users/{userID}')
   .onUpdate((change) => {
     console.log(change.before.data());
     console.log(change.after.data());
@@ -138,13 +138,13 @@ exports.onUserImageChange = functions
 
 exports.onShoutDelete = functions
   .region('us-central1')
-  .firestore.document('/shouts/{shoutId}')
+  .firestore.document('/shouts/{shoutID}')
   .onDelete((snapshot, context) => {
-    const shoutId = context.params.shoutId;
+    const shoutID = context.params.shoutID;
     const batch = db.batch();
     return db
       .collection('comments')
-      .where('shoutId', '==', shoutId)
+      .where('shoutID', '==', shoutID)
       .get()
       .then((data) => {
         data.forEach((doc) => {
@@ -152,7 +152,7 @@ exports.onShoutDelete = functions
         });
         return db
           .collection('likes')
-          .where('shoutId', '==', shoutId)
+          .where('shoutID', '==', shoutID)
           .get();
       })
       .then((data) => {
@@ -161,7 +161,7 @@ exports.onShoutDelete = functions
         });
         return db
           .collection('notifications')
-          .where('shoutId', '==', shoutId)
+          .where('shoutID', '==', shoutID)
           .get();
       })
       .then((data) => {

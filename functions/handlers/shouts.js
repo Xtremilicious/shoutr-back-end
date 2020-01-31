@@ -10,7 +10,10 @@ exports.getAllShouts = (req, res) => {
           shoutID: doc.id,
           body: doc.data().body,
           userHandle: doc.data().userHandle,
-          createdAt: doc.data().createdAt
+          createdAt: doc.data().createdAt,
+          likeCount:doc.data().likeCount,
+          commentCount: doc.data().commentCount,
+          userHandle: doc.data().userImage
         });
       });
       return res.json(shouts);
@@ -20,7 +23,7 @@ exports.getAllShouts = (req, res) => {
 
 exports.postOneShout = (req, res) => {
   if (req.body.body.trim() === "") {
-    return res.status(400).json({ body: "Body must not be empty" });
+    return res.status(400).json({ comment: "Must not be empty" });
   }
   const newShout = {
     body: req.body.body,

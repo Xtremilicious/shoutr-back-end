@@ -120,7 +120,7 @@ exports.getUserDetails = (req, res) => {
       if (doc.exists) {
         userData.user = doc.data();
         return db
-          .collection("screams")
+          .collection("shouts")
           .where("userHandle", "==", req.params.handle)
           .orderBy("createdAt", "desc")
           .get();
@@ -129,16 +129,16 @@ exports.getUserDetails = (req, res) => {
       }
     })
     .then(data => {
-      userData.screams = [];
+      userData.shouts = [];
       data.forEach(doc => {
-        userData.screams.push({
+        userData.shouts.push({
           body: doc.data().body,
           createdAt: doc.data().createdAt,
           userHandle: doc.data().userHandle,
           userImage: doc.data().userImage,
           likeCount: doc.data().likeCount,
           commentCount: doc.data().commentCount,
-          screamId: doc.id
+          shoutID: doc.id
         });
       });
       return res.json(userData);
@@ -250,8 +250,8 @@ exports.uploadImage = (req, res) => {
 
 exports.markNotificationsRead = (req, res) => {
   let batch = db.batch();
-  req.body.forEach(notificationId => {
-    const notification = db.doc(`/notifications/${notificationId}`);
+  req.body.forEach(notificationID => {
+    const notification = db.doc(`/notifications/${notificationID}`);
     batch.update(notification, { read: true });
   });
   batch
