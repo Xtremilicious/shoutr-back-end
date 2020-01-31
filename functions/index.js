@@ -44,14 +44,14 @@ app.get('/user', FBAuth, getAuthenticatedUser);
 app.get('/user/:handle', getUserDetails);
 app.post('/notifications', FBAuth, markNotificationsRead);
 
-exports.api = functions.region('europe-west1').https.onRequest(app);
+exports.api = functions.region('us-central1').https.onRequest(app);
 
 exports.createNotificationOnLike = functions
-  .region('europe-west1')
+  .region('us-central1')
   .firestore.document('likes/{id}')
   .onCreate((snapshot) => {
     return db
-      .doc(`/shouts/${snapshot.data().shoutId}`)
+      .doc(`/shouts/${snapshot.data().shoutID}`)
       .get()
       .then((doc) => {
         if (
@@ -64,14 +64,14 @@ exports.createNotificationOnLike = functions
             sender: snapshot.data().userHandle,
             type: 'like',
             read: false,
-            shoutId: doc.id
+            shoutID: doc.id
           });
         }
       })
       .catch((err) => console.error(err));
   });
 exports.deleteNotificationOnUnLike = functions
-  .region('europe-west1')
+  .region('us-central1')
   .firestore.document('likes/{id}')
   .onDelete((snapshot) => {
     return db
@@ -83,11 +83,11 @@ exports.deleteNotificationOnUnLike = functions
       });
   });
 exports.createNotificationOnComment = functions
-  .region('europe-west1')
+  .region('us-central1')
   .firestore.document('comments/{id}')
   .onCreate((snapshot) => {
     return db
-      .doc(`/shouts/${snapshot.data().shoutId}`)
+      .doc(`/shouts/${snapshot.data().shoutID}`)
       .get()
       .then((doc) => {
         if (
@@ -100,9 +100,12 @@ exports.createNotificationOnComment = functions
             sender: snapshot.data().userHandle,
             type: 'comment',
             read: false,
-            shoutId: doc.id
+            shoutID: doc.id
           });
         }
+      })
+      .then(() => {
+        return;
       })
       .catch((err) => {
         console.error(err);
@@ -111,7 +114,7 @@ exports.createNotificationOnComment = functions
   });
 
 exports.onUserImageChange = functions
-  .region('europe-west1')
+  .region('us-central1')
   .firestore.document('/users/{userId}')
   .onUpdate((change) => {
     console.log(change.before.data());
@@ -134,7 +137,7 @@ exports.onUserImageChange = functions
   });
 
 exports.onShoutDelete = functions
-  .region('europe-west1')
+  .region('us-central1')
   .firestore.document('/shouts/{shoutId}')
   .onDelete((snapshot, context) => {
     const shoutId = context.params.shoutId;

@@ -183,10 +183,10 @@ exports.getAuthenticatedUser = (req, res) => {
           recipient: doc.data().recipient,
           sender: doc.data().sender,
           createdAt: doc.data().createdAt,
-          screamId: doc.data().screamId,
+          shoutID: doc.data().shoutID,
           type: doc.data().type,
           read: doc.data().read,
-          notificationId: doc.id
+          notificationID: doc.id
         });
       });
       return res.json(userData);
