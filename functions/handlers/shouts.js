@@ -13,7 +13,8 @@ exports.getAllShouts = (req, res) => {
           createdAt: doc.data().createdAt,
           likeCount:doc.data().likeCount,
           commentCount: doc.data().commentCount,
-          userHandle: doc.data().userImage
+          userHandle: doc.data().userHandle,
+          userImage: doc.data().userImage
         });
       });
       return res.json(shouts);
